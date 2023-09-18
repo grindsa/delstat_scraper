@@ -1,40 +1,5 @@
 # delstat scraper - a webscraper for the penny-del statistic pages
 
-## Teamstats - usage and methods
-
-```python
-with DelStats(debug=DEBUG) as delstats:
-
-    teamstats = delstats.teamstats()
-
-    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/schuesse
-    teamstats.schuesse()
-
-    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/team-play
-    teamstats.teamplay()
-
-    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/paesse
-    teamstats.paesse()
-
-    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/defensive
-    teamstats.defensive()
-
-    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/puckbesitz
-    teamstats.puckbesitz()
-
-    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/strafen
-    teamstats.strafen()
-
-    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/special-teams
-    teamstats.specialteams()
-
-    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/zuschauer
-    teamstats.zuschauer()
-
-    # a single report containing all the above
-    teamstats.all()
-```
-
 ## Playerstats - usage and methods
 
 ```python
@@ -74,6 +39,50 @@ with DelStats(debug=DEBUG) as delstats:
 
     # all the above
     playerstats.all()
+```
+
+## Tabelle - usage and methods
+
+```python
+with DelStats(debug=DEBUG) as delstats:
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/playerstats/basis
+    delstats.tabelle()
+```
+
+## Teamstats - usage and methods
+
+```python
+with DelStats(debug=DEBUG) as delstats:
+
+    teamstats = delstats.teamstats()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/schuesse
+    teamstats.schuesse()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/team-play
+    teamstats.teamplay()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/paesse
+    teamstats.paesse()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/defensive
+    teamstats.defensive()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/puckbesitz
+    teamstats.puckbesitz()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/strafen
+    teamstats.strafen()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/special-teams
+    teamstats.specialteams()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/teamstats/zuschauer
+    teamstats.zuschauer()
+
+    # a single report containing all the above
+    teamstats.all()
 ```
 
 ## Contributing
