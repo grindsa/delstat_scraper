@@ -1,5 +1,29 @@
 # delstat scraper - a webscraper for the penny-del statistic pages
 
+## Goaliestats - usage and methods
+
+```python
+with DelStats(debug=DEBUG) as delstats:
+
+    goaliestats = delstats.goaliestats()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/goaliestats/basis
+    goaliestats.basis()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/goaliestats/schuesse
+    goaliestats.schuesse()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/goaliestats/xg
+    goaliestats.xg()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/goaliestats/gegentore
+    goaliestats.gegentore()
+
+    # https://www.penny-del.org/statistik/saison-2023-24/hauptrunde/goaliestats/paesse
+    goaliestats.paesse()
+
+```
+
 ## Playerstats - usage and methods
 
 ```python
@@ -87,7 +111,7 @@ with DelStats(debug=DEBUG) as delstats:
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://github.com/grindsa/delstat_scraper/master/CONTRIBUTING.md) for details on my code of conduct, and the process for submitting pull requests.
+Please read [CONTRIBUTING.md](https://github.com/grindsa/delstat_scraper/blob/main/CONTRIBUTING.md) for details on my code of conduct, and the process for submitting pull requests.
 Please note that I have a life besides programming. Thus, expect a delay in answering.
 
 ## License

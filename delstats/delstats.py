@@ -186,8 +186,12 @@ class DelStats(object):
     def __exit__(self, *args):
         """ cleanup method for context manager """
 
+    def goaliestats(self):
+        """ initialize Goaliestats class """
+        return DelStats.Goaliestats(self)
+
     def playerstats(self):
-        """ initialize Teamstat class """
+        """ initialize Playerstats class """
         return DelStats.Playerstats(self)
 
     def tabelle(self):
@@ -200,8 +204,61 @@ class DelStats(object):
         """ initialize Teamstat class """
         return DelStats.Teamstats(self)
 
+    class Goaliestats(object):
+        """ Goaliestats class """
+
+        debug = False
+        logger = None
+        playerstats_url = None
+
+        def __init__(self, outer_instance):
+            self.logger = logger_setup(outer_instance.debug)
+            self.goalistats_url = f'{outer_instance.base_url}/goaliestats'
+
+        def all(self):
+            """ all """
+            self.logger.debug('Delstats.Playerstats.all()')
+            output_dic = merge_dic(self.logger, {}, self.basis(), 'basis')
+            output_dic = merge_dic(self.logger, output_dic, self.paesse(), 'paesse')
+            output_dic = merge_dic(self.logger, output_dic, self.gegentore(), 'gegentore')
+            output_dic = merge_dic(self.logger, output_dic, self.paesse(), 'paesse')
+            output_dic = merge_dic(self.logger, output_dic, self.schuesse(), 'schuesse')
+            output_dic = merge_dic(self.logger, output_dic, self.xg(), 'xg')
+
+            return output_dic
+
+        def basis(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Goaliestats.paesse()')
+            html = url_get(self.logger, f'{self.goalistats_url}/basis')
+            return content_parse(self.logger, html, pkey=3)
+
+        def gegentore(self):
+            """ schuesse statistic """
+            self.logger.debug('Delstats.Goaliestats.gegentore()')
+            html = url_get(self.logger, f'{self.goalistats_url}/gegentore')
+            return content_parse(self.logger, html, pkey=3)
+
+        def paesse(self):
+            """ paesse statistic """
+            self.logger.debug('Delstats.Goaliestats.paesse()')
+            html = url_get(self.logger, f'{self.goalistats_url}/paesse')
+            return content_parse(self.logger, html, pkey=3)
+
+        def schuesse(self):
+            """ schuesse statistic """
+            self.logger.debug('Delstats.Goaliestats.schuesse()')
+            html = url_get(self.logger, f'{self.goalistats_url}/schuesse')
+            return content_parse(self.logger, html, pkey=3)
+
+        def xg(self):
+            """ xg statistic """
+            self.logger.debug('Delstats.Goaliestats.xg()')
+            html = url_get(self.logger, f'{self.goalistats_url}/xg')
+            return content_parse(self.logger, html, pkey=3)
+
     class Playerstats(object):
-        """ teamstat class """
+        """ Okayerstats class """
 
         debug = False
         logger = None
@@ -217,8 +274,8 @@ class DelStats(object):
             output_dic = merge_dic(self.logger, {}, self.basis(), 'basis')
             output_dic = merge_dic(self.logger, output_dic, self.paesse(), 'paesse')
             output_dic = merge_dic(self.logger, output_dic, self.puckbesitz(), 'puckbesitz')
-            output_dic = merge_dic(self.logger, output_dic, self.puckbesitz(), 'schuesse')
-            output_dic = merge_dic(self.logger, output_dic, self.puckbesitz(), 'skating')
+            output_dic = merge_dic(self.logger, output_dic, self.schuesse(), 'schuesse')
+            output_dic = merge_dic(self.logger, output_dic, self.skating(), 'skating')
             output_dic = merge_dic(self.logger, output_dic, self.strafen(), 'strafen')
             output_dic = merge_dic(self.logger, output_dic, self.teamplay(), 'teamplay')
             output_dic = merge_dic(self.logger, output_dic, self.toi(), 'toi')
