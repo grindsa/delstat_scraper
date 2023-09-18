@@ -108,6 +108,11 @@ class TestDeöstats(unittest.TestCase):
         value = '8.143,23 m'
         self.assertEqual((8143.23, 'm'), self.value_convert(value))
 
+    def test_018_value_convert(self):
+        """ test value_convert() """
+        value = '0'
+        self.assertEqual((0, None), self.value_convert(value))
+
 if __name__ == '__main__':
 
     unittest.main()

@@ -153,3 +153,5 @@ cython_debug/
 
 # mystuff
 dev_helper.py
+*.html
+*.json
