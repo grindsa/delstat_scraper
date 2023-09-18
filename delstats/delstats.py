@@ -1,9 +1,11 @@
 """ del stats - class collection """
 # -*- coding: utf-8 -*-
+# pylint: disable=c0103
+
 import logging
+import re
 import requests
 from bs4 import BeautifulSoup
-import re
 
 
 def parse_number_with_guess_for_separator_chars(number_str: str, max_val=None):
@@ -22,27 +24,45 @@ def parse_number_with_guess_for_separator_chars(number_str: str, max_val=None):
     pattern_confusion_dot_thousands = re.compile(r'^(?:[-+]?(?=.*\d)(?=.*[1-9]).{1,3}\.\d{3})$')  # for numbers like '100.000' (is it 100.0 or 100000?)
     pattern_confusion_comma_thousands = re.compile(r'^(?:[-+]?(?=.*\d)(?=.*[1-9]).{1,3},\d{3})$')  # for numbers like '100,000' (is it 100.0 or 100000?)
 
-    number_str = number_str.strip().lstrip('0')
-    certain = True
-    if pattern_confusion_dot_thousands.match(number_str) is not None:
-        number_str = number_str.replace('.', '')  # assume dot is thousands separator
-        certain = False
-    elif pattern_confusion_comma_thousands.match(number_str) is not None:
-        number_str = number_str.replace(',', '')  # assume comma is thousands separator
-        certain = False
-    elif pattern_comma_thousands_dot_decimal.match(number_str) is not None:
-        number_str = number_str.replace(',', '')
-    elif pattern_dot_thousands_comma_decimal.match(number_str) is not None:
-        number_str = number_str.replace('.', '').replace(',', '.')
+    if number_str == '0':
+        number = 0
+        certain = True
     else:
-        raise ValueError()  # For stuff like '10,000.000,0' and other nonsense
+        number_str = number_str.strip().lstrip('0')
+        certain = True
+        if pattern_confusion_dot_thousands.match(number_str) is not None:
+            number_str = number_str.replace('.', '')  # assume dot is thousands separator
+            certain = False
+        elif pattern_confusion_comma_thousands.match(number_str) is not None:
+            number_str = number_str.replace(',', '')  # assume comma is thousands separator
+            certain = False
+        elif pattern_comma_thousands_dot_decimal.match(number_str) is not None:
+            number_str = number_str.replace(',', '')
+        elif pattern_dot_thousands_comma_decimal.match(number_str) is not None:
+            number_str = number_str.replace('.', '').replace(',', '.')
+        else:
+            raise ValueError()  # For stuff like '10,000.000,0' and other nonsense
 
-    number = float(number_str)
-    if not certain and max_val is not None and number > max_val:
-        number *= 0.001  # Change previous assumption to decimal separator, so '100.000' goes from 100000.0 to 100.0
-        certain = True  # Since this uniquely satisfies the given constraint, it should be a certainly correct interpretation
+        number = float(number_str)
+        if not certain and max_val is not None and number > max_val:
+            number *= 0.001  # Change previous assumption to decimal separator, so '100.000' goes from 100000.0 to 100.0
+            certain = True  # Since this uniquely satisfies the given constraint, it should be a certainly correct interpretation
 
-    return number # , certain
+    return number  # , certain
+
+
+def merge_dic(logger, input_dic, other_dic, area=None):
+    """ merge dictionary """
+    logger.debug(f'merge_dic({area})')
+    for dic_key in other_dic:
+        if dic_key not in input_dic:
+            input_dic[dic_key] = {}
+        if area not in input_dic[dic_key]:
+            input_dic[dic_key][area] = {}
+            for key, value in other_dic[dic_key].items():
+                input_dic[dic_key][area][key] = value
+
+    return input_dic
 
 
 def value_convert(value):
@@ -60,6 +80,7 @@ def value_convert(value):
         pass
 
     return value, unit
+
 
 def file_load(file_name):
     """ load file """
@@ -100,7 +121,7 @@ def logger_setup(debug):
     return logger
 
 
-def content_parse(logger, content):
+def content_parse(logger, content, pkey=1):
     """ parse content """
     logger.debug('content_parse()')
 
@@ -125,9 +146,14 @@ def content_parse(logger, content):
         cols = [ele.text.strip() for ele in cols]
 
         if len(cols) > 0:
-            stat_dic[cols[1]] = {}
+            # corner case playerstats and player name - remove \n
+            cols[pkey] = cols[pkey].replace('\n', ' ')
+            stat_dic[cols[pkey]] = {}
             for idx, col in enumerate(cols):
-                stat_dic[cols[1]][header_list[idx]] = {'title': header_decription_list[idx], 'value': value_convert(col)}
+                if idx == 0:
+                    continue
+                value, unit = value_convert(col)
+                stat_dic[cols[pkey]][header_list[idx]] = {'title': header_decription_list[idx], 'value': value, 'unit': unit, 'value_original': col}
 
     logger.debug(f'content_parse() ended: {len(stat_dic.keys())} keys in dictionary')
     return stat_dic
@@ -160,9 +186,106 @@ class DelStats(object):
     def __exit__(self, *args):
         """ cleanup method for context manager """
 
+    def playerstats(self):
+        """ initialize Teamstat class """
+        return DelStats.Playerstats(self)
+
+    def tabelle(self):
+        """ get tabelle """
+        self.logger.debug('Delstats.Tabelle.tabelle()')
+        html = url_get(self.logger, f'{self.base_url}/tabelle')
+        return content_parse(self.logger, html)
+
     def teamstats(self):
         """ initialize Teamstat class """
         return DelStats.Teamstats(self)
+
+    class Playerstats(object):
+        """ teamstat class """
+
+        debug = False
+        logger = None
+        playerstats_url = None
+
+        def __init__(self, outer_instance):
+            self.logger = logger_setup(outer_instance.debug)
+            self.playerstats_url = f'{outer_instance.base_url}/playerstats'
+
+        def all(self):
+            """ all """
+            self.logger.debug('Delstats.Playerstats.all()')
+            output_dic = merge_dic(self.logger, {}, self.basis(), 'basis')
+            output_dic = merge_dic(self.logger, output_dic, self.paesse(), 'paesse')
+            output_dic = merge_dic(self.logger, output_dic, self.puckbesitz(), 'puckbesitz')
+            output_dic = merge_dic(self.logger, output_dic, self.puckbesitz(), 'schuesse')
+            output_dic = merge_dic(self.logger, output_dic, self.puckbesitz(), 'skating')
+            output_dic = merge_dic(self.logger, output_dic, self.strafen(), 'strafen')
+            output_dic = merge_dic(self.logger, output_dic, self.teamplay(), 'teamplay')
+            output_dic = merge_dic(self.logger, output_dic, self.toi(), 'toi')
+            output_dic = merge_dic(self.logger, output_dic, self.verteidigung(), 'verteidigung')
+            output_dic = merge_dic(self.logger, output_dic, self.xg(), 'xg')
+
+            return output_dic
+
+        def basis(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.paesse()')
+            html = url_get(self.logger, f'{self.playerstats_url}/basis')
+            return content_parse(self.logger, html, pkey=3)
+
+        def paesse(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.paesse()')
+            html = url_get(self.logger, f'{self.playerstats_url}/paesse')
+            return content_parse(self.logger, html, pkey=3)
+
+        def puckbesitz(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.puckbesitz()')
+            html = url_get(self.logger, f'{self.playerstats_url}/puckbesitz')
+            return content_parse(self.logger, html, pkey=3)
+
+        def schuesse(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.schuesse()')
+            html = url_get(self.logger, f'{self.playerstats_url}/schuesse')
+            return content_parse(self.logger, html, pkey=3)
+
+        def skating(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.skating()')
+            html = url_get(self.logger, f'{self.playerstats_url}/skating')
+            return content_parse(self.logger, html, pkey=3)
+
+        def strafen(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.strafen()')
+            html = url_get(self.logger, f'{self.playerstats_url}/strafen')
+            return content_parse(self.logger, html, pkey=3)
+
+        def teamplay(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.teamplay()')
+            html = url_get(self.logger, f'{self.playerstats_url}/team-play')
+            return content_parse(self.logger, html, pkey=3)
+
+        def toi(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.toi()')
+            html = url_get(self.logger, f'{self.playerstats_url}/toi')
+            return content_parse(self.logger, html, pkey=3)
+
+        def verteidigung(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.verteidigung()')
+            html = url_get(self.logger, f'{self.playerstats_url}/verteidigung')
+            return content_parse(self.logger, html, pkey=3)
+
+        def xg(self):
+            """ basis statistic """
+            self.logger.debug('Delstats.Playerstats.xg()')
+            html = url_get(self.logger, f'{self.playerstats_url}/xg')
+            return content_parse(self.logger, html, pkey=3)
 
     class Teamstats(object):
         """ teamstat class """
@@ -176,16 +299,24 @@ class DelStats(object):
             self.teamstats_url = f'{outer_instance.base_url}/teamstats'
 
         def all(self):
-            """ get all statistics """
+            """ merge all """
             self.logger.debug('Delstats.Teamstats.all()')
+            output_dic = merge_dic(self.logger, {}, self.paesse(), 'paesse')
+            output_dic = merge_dic(self.logger, output_dic, self.paesse(), 'paesse')
+            output_dic = merge_dic(self.logger, output_dic, self.puckbesitz(), 'puckbesitz')
+            output_dic = merge_dic(self.logger, output_dic, self.schuesse(), 'schuesse')
+            output_dic = merge_dic(self.logger, output_dic, self.specialteams(), 'specialteams')
+            output_dic = merge_dic(self.logger, output_dic, self.strafen(), 'strafen')
+            output_dic = merge_dic(self.logger, output_dic, self.specialteams(), 'specialteams')
+            output_dic = merge_dic(self.logger, output_dic, self.zuschauer(), 'zuschauer')
 
-            # return output_dic
+            return output_dic
 
         def defensive(self):
-            """ get shot statistic """
+            """ get defensive statistic """
             self.logger.debug('Delstats.Teamstats.paesse()')
             html = url_get(self.logger, f'{self.teamstats_url}/defensive')
-            # html = file_load('files/paesse.html')
+            # html = file_load('files/Defensive.html')
             return content_parse(self.logger, html)
 
         def paesse(self):
