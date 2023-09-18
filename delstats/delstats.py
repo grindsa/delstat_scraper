@@ -291,55 +291,55 @@ class DelStats(object):
             return content_parse(self.logger, html, pkey=3)
 
         def paesse(self):
-            """ basis statistic """
+            """ paesse statistic """
             self.logger.debug('Delstats.Playerstats.paesse()')
             html = url_get(self.logger, f'{self.playerstats_url}/paesse')
             return content_parse(self.logger, html, pkey=3)
 
         def puckbesitz(self):
-            """ basis statistic """
+            """ puckbesitz statistic """
             self.logger.debug('Delstats.Playerstats.puckbesitz()')
             html = url_get(self.logger, f'{self.playerstats_url}/puckbesitz')
             return content_parse(self.logger, html, pkey=3)
 
         def schuesse(self):
-            """ basis statistic """
+            """ schuesse statistic """
             self.logger.debug('Delstats.Playerstats.schuesse()')
             html = url_get(self.logger, f'{self.playerstats_url}/schuesse')
             return content_parse(self.logger, html, pkey=3)
 
         def skating(self):
-            """ basis statistic """
+            """ skating statistic """
             self.logger.debug('Delstats.Playerstats.skating()')
             html = url_get(self.logger, f'{self.playerstats_url}/skating')
             return content_parse(self.logger, html, pkey=3)
 
         def strafen(self):
-            """ basis statistic """
+            """ strafen statistic """
             self.logger.debug('Delstats.Playerstats.strafen()')
             html = url_get(self.logger, f'{self.playerstats_url}/strafen')
             return content_parse(self.logger, html, pkey=3)
 
         def teamplay(self):
-            """ basis statistic """
+            """ teamplay statistic """
             self.logger.debug('Delstats.Playerstats.teamplay()')
             html = url_get(self.logger, f'{self.playerstats_url}/team-play')
             return content_parse(self.logger, html, pkey=3)
 
         def toi(self):
-            """ basis statistic """
+            """ toi statistic """
             self.logger.debug('Delstats.Playerstats.toi()')
             html = url_get(self.logger, f'{self.playerstats_url}/toi')
             return content_parse(self.logger, html, pkey=3)
 
         def verteidigung(self):
-            """ basis statistic """
+            """ verteidigung statistic """
             self.logger.debug('Delstats.Playerstats.verteidigung()')
             html = url_get(self.logger, f'{self.playerstats_url}/verteidigung')
             return content_parse(self.logger, html, pkey=3)
 
         def xg(self):
-            """ basis statistic """
+            """ xg statistic """
             self.logger.debug('Delstats.Playerstats.xg()')
             html = url_get(self.logger, f'{self.playerstats_url}/xg')
             return content_parse(self.logger, html, pkey=3)
@@ -370,56 +370,56 @@ class DelStats(object):
             return output_dic
 
         def defensive(self):
-            """ get defensive statistic """
+            """ defensive statistic """
             self.logger.debug('Delstats.Teamstats.paesse()')
             html = url_get(self.logger, f'{self.teamstats_url}/defensive')
             # html = file_load('files/Defensive.html')
             return content_parse(self.logger, html)
 
         def paesse(self):
-            """ get pass statistics """
+            """ pass statistics """
             self.logger.debug('Delstats.Teamstats.paesse()')
             html = url_get(self.logger, f'{self.teamstats_url}/paesse')
             # html = file_load('files/paesse.html')
             return content_parse(self.logger, html)
 
         def puckbesitz(self):
-            """ get pass statistics """
+            """ pass statistics """
             self.logger.debug('Delstats.Teamstats.puckbesitz()')
             html = url_get(self.logger, f'{self.teamstats_url}/puckbesitz')
             # html = file_load('files/paesse.html')
             return content_parse(self.logger, html)
 
         def schuesse(self):
-            """ get shot statistic """
+            """ shot statistic """
             self.logger.debug('Delstats.Teamstats.schuesse()')
             html = url_get(self.logger, f'{self.teamstats_url}/schuesse')
             # html = file_load('files/paesse.html')
             return content_parse(self.logger, html)
 
         def specialteams(self):
-            """ get shot statistic """
+            """ shot statistic """
             self.logger.debug('Delstats.Teamstats.specialteams()')
             html = url_get(self.logger, f'{self.teamstats_url}/special-teams')
             # html = file_load('files/paesse.html')
             return content_parse(self.logger, html)
 
         def strafen(self):
-            """ get teamplay statistic """
+            """ teamplay statistic """
             self.logger.debug('Delstats.Teamstats.strafen()')
             html = url_get(self.logger, f'{self.teamstats_url}/strafen')
             # html = file_load('files/paesse.html')
             return content_parse(self.logger, html)
 
         def teamplay(self):
-            """ get teamplay statistic """
+            """ teamplay statistic """
             self.logger.debug('Delstats.Teamstats.teamplay')
             html = url_get(self.logger, f'{self.teamstats_url}/team-play')
             # html = file_load('files/paesse.html')
             return content_parse(self.logger, html)
 
         def zuschauer(self):
-            """ get teamplay statistic """
+            """ teamplay statistic """
             self.logger.debug('Delstats.Teamstats.zuschauer')
             html = url_get(self.logger, f'{self.teamstats_url}/zuschauer')
             # html = file_load('files/paesse.html')
