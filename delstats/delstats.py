@@ -364,7 +364,6 @@ class DelStats(object):
             output_dic = merge_dic(self.logger, output_dic, self.schuesse(), 'schuesse')
             output_dic = merge_dic(self.logger, output_dic, self.specialteams(), 'specialteams')
             output_dic = merge_dic(self.logger, output_dic, self.strafen(), 'strafen')
-            output_dic = merge_dic(self.logger, output_dic, self.specialteams(), 'specialteams')
             output_dic = merge_dic(self.logger, output_dic, self.zuschauer(), 'zuschauer')
 
             return output_dic
