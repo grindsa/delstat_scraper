@@ -6,7 +6,7 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / 'README.md').read_text()
 
 setup(name='delstat_scraper',
-    version='0.1.0',
+    version='0.1.1',
     description='a webscraper for the penny-del statistic pages',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -18,7 +18,7 @@ setup(name='delstat_scraper',
     platforms='any',
     install_requires=[
         'bs4',
-        'reqiests',
+        'requests',
     ],
     classifiers = [
         'Programming Language :: Python',
