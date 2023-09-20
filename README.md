@@ -3,6 +3,8 @@
 ## Goaliestats - usage and methods
 
 ```python
+from delstats import DelStats
+
 with DelStats(debug=DEBUG) as delstats:
 
     goaliestats = delstats.goaliestats()
