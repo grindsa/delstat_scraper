@@ -14,7 +14,7 @@ setup(name='delstat_scraper',
     author='grindsa',
     author_email='grindelsack@gmail.com',
     license='GPL',
-    packages=['delstat_scraper'],
+    packages=['delstats'],
     platforms='any',
     install_requires=[
         'bs4',
