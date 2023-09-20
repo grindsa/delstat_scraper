@@ -359,7 +359,7 @@ class DelStats(object):
             """ merge all """
             self.logger.debug('Delstats.Teamstats.all()')
             output_dic = merge_dic(self.logger, {}, self.paesse(), 'paesse')
-            output_dic = merge_dic(self.logger, output_dic, self.paesse(), 'paesse')
+            output_dic = merge_dic(self.logger, output_dic, self.defensive(), 'defensive')
             output_dic = merge_dic(self.logger, output_dic, self.puckbesitz(), 'puckbesitz')
             output_dic = merge_dic(self.logger, output_dic, self.schuesse(), 'schuesse')
             output_dic = merge_dic(self.logger, output_dic, self.specialteams(), 'specialteams')
