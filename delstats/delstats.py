@@ -385,8 +385,8 @@ class DelStats(object):
         def puckbesitz(self):
             """ pass statistics """
             self.logger.debug('Delstats.Teamstats.puckbesitz()')
-            html = url_get(self.logger, f'{self.teamstats_url}/puckbesitz')
-            # html = file_load('files/paesse.html')
+            html = url_get(self.logger, f'{self.teamstats_url}/Puckbesitz')
+            # html = file_load('files/Puckbesitz.html')
             return content_parse(self.logger, html)
 
         def schuesse(self):
@@ -400,7 +400,7 @@ class DelStats(object):
             """ shot statistic """
             self.logger.debug('Delstats.Teamstats.specialteams()')
             html = url_get(self.logger, f'{self.teamstats_url}/special-teams')
-            # html = file_load('files/paesse.html')
+            # html = file_load('files/SpecialTeams.html')
             return content_parse(self.logger, html)
 
         def strafen(self):
