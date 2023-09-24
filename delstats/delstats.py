@@ -385,7 +385,7 @@ class DelStats(object):
         def puckbesitz(self):
             """ pass statistics """
             self.logger.debug('Delstats.Teamstats.puckbesitz()')
-            html = url_get(self.logger, f'{self.teamstats_url}/Puckbesitz')
+            html = url_get(self.logger, f'{self.teamstats_url}/puckbesitz')
             # html = file_load('files/Puckbesitz.html')
             return content_parse(self.logger, html)
 
